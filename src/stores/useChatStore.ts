@@ -589,7 +589,7 @@ const useChatStore = create<IChatStore>((set, get) => ({
       msg.prompt = message.prompt as string;
       params.push(msg.prompt);
     }
-    if (isNotBlank(message.reply)) {
+    if (!isUndefined(message.reply)) {
       stats.push('reply = ?');
       msg.reply = message.reply as string;
       params.push(msg.reply);
@@ -634,7 +634,7 @@ const useChatStore = create<IChatStore>((set, get) => ({
       msg.citedChunks = message.citedChunks as string;
       params.push(msg.citedChunks);
     }
-    if (!isBlank(message.reasoning)) {
+    if (!isUndefined(message.reasoning)) {
       stats.push('reasoning = ?');
       msg.reasoning = message.reasoning as string;
       params.push(msg.reasoning);

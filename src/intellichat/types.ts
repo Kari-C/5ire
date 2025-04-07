@@ -1,5 +1,50 @@
 import { IChatModel, IServiceProvider } from 'providers/types';
 
+export interface IPrompt {
+  id: string;
+  name: string;
+  systemMessage: string;
+  userMessage: string;
+  maxTokens?: number;
+  temperature?: number;
+}
+
+export interface IChat {
+  id: string;
+  summary: string;
+  folderId: string | null;
+  model?: string;
+  systemMessage?: string | null;
+  maxCtxMessages?: number;
+  temperature?: number;
+  stream?: boolean;
+  context?: string | null;
+  maxTokens?: number | null;
+  createdAt: number | null;
+  prompt: IPrompt | string | null;
+  input: string | null;
+}
+
+export interface IChatMessage {
+  id: string;
+  bookmarkId?: string | null;
+  chatId: string;
+  systemMessage?: string | null;
+  prompt: string;
+  reply: string;
+  reasoning?: string;
+  model: string;
+  temperature: number;
+  maxTokens: number | null;
+  inputTokens: number;
+  outputTokens: number;
+  memo?: string;
+  createdAt: number;
+  isActive: boolean | 0 | 1;
+  citedFiles?: string;
+  citedChunks?: string;
+}
+
 export interface IChatResponseMessage {
   reasoning?: string;
   content?: string;
@@ -156,7 +201,7 @@ export interface IChatContext {
   getTemperature: () => number;
   getMaxTokens: () => number;
   getChatContext: () => string;
-  getCtxMessages: () => IChatMessage[];
+  getCtxMessages: (msgId?: string) => IChatMessage[];
   isStream: () => boolean;
   isToolEnabled: () => boolean;
 }
@@ -175,42 +220,6 @@ export interface IChatFolder {
   isNew?: boolean;
 }
 
-export interface IChat {
-  id: string;
-  summary: string;
-  folderId: string | null;
-  model?: string;
-  systemMessage?: string | null;
-  maxCtxMessages?: number;
-  temperature?: number;
-  stream?: boolean;
-  context?: string | null;
-  maxTokens?: number | null;
-  createdAt: number | null;
-  prompt: IPrompt | string | null;
-  input: string | null;
-}
-
-export interface IChatMessage {
-  id: string;
-  bookmarkId?: string | null;
-  chatId: string;
-  systemMessage?: string | null;
-  prompt: string;
-  reply: string;
-  reasoning?: string;
-  model: string;
-  temperature: number;
-  maxTokens: number | null;
-  inputTokens: number;
-  outputTokens: number;
-  memo?: string;
-  createdAt: number;
-  isActive: boolean | 0 | 1;
-  citedFiles?: string;
-  citedChunks?: string;
-}
-
 export interface IPromptDef {
   id: string;
   name: string;
@@ -225,15 +234,6 @@ export interface IPromptDef {
   updatedAt: number;
   pinedAt: number | null;
   provider: string | null; // mcp server key or null(built-in)
-}
-
-export interface IPrompt {
-  id: string;
-  name: string;
-  systemMessage: string;
-  userMessage: string;
-  maxTokens?: number;
-  temperature?: number;
 }
 
 export interface IStage {

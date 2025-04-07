@@ -1,4 +1,3 @@
-import Debug from 'debug';
 import {
   Avatar,
   Menu,
@@ -29,7 +28,7 @@ import { useEffect, useState } from 'react';
 import useToast from 'hooks/useToast';
 import useAuthStore from 'stores/useAuthStore';
 
-const debug = Debug('5ire:components:layout:aside:WorkspaceMenu');
+// const debug = Debug('5ire:components:layout:aside:WorkspaceMenu');
 
 const FireIcon = bundleIcon(Fire24Filled, Fire24Regular);
 
@@ -90,21 +89,22 @@ export default function WorkspaceMenu({ collapsed }: { collapsed: boolean }) {
               {collapsed ? null : t('Common.Workspace')}
             </MenuButton>
           </MenuTrigger>
-          {collapsed ? null : user ? (
-            <Button
-              className="ml-5"
-              onClick={() => navigate('/user/account')}
-              appearance="subtle"
-              icon={
-                <Avatar
-                  aria-label={t('Common.User')}
-                  name={user.user_metadata.name}
-                  color="colorful"
-                  size={24}
-                />
-              }
-            />
-          ) : null}
+          {collapsed ||
+            (user && (
+              <Button
+                className="ml-5"
+                onClick={() => navigate('/user/account')}
+                appearance="subtle"
+                icon={
+                  <Avatar
+                    aria-label={t('Common.User')}
+                    name={user.user_metadata.name}
+                    color="colorful"
+                    size={24}
+                  />
+                }
+              />
+            ))}
         </div>
         <MenuPopover
           className="w-full"

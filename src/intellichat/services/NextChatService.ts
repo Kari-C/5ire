@@ -102,15 +102,17 @@ export default abstract class NextCharService {
 
   protected abstract makePayload(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<IChatRequestPayload>;
 
   protected abstract makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response>;
 
   protected getModelName() {
     const model = this.context.getModel();
-    return this.modelMapping[model.name as string] || model.name;
+    return this.modelMapping[model.label as string] || model.label;
   }
 
   public onComplete(callback: (result: any) => Promise<void>) {
@@ -169,7 +171,7 @@ export default abstract class NextCharService {
     return true;
   }
 
-  public async chat(messages: IChatRequestMessage[]) {
+  public async chat(messages: IChatRequestMessage[], msgId?: string) {
     const chatId = this.context.getActiveChat().id;
     this.abortController = new AbortController();
     let reply = '';
@@ -177,7 +179,7 @@ export default abstract class NextCharService {
     let signal: any = null;
     try {
       signal = this.abortController.signal;
-      const response = await this.makeRequest(messages);
+      const response = await this.makeRequest(messages, msgId);
       debug('Start Reading:', response.status, response.statusText);
       if (response.status !== 200) {
         const contentType = response.headers.get('content-type');
@@ -199,7 +201,9 @@ export default abstract class NextCharService {
       }
       const chatReader = this.createReader(reader);
       const readResult = await chatReader.read({
-        onError: (err: any) => this.onErrorCallback(err, !!signal?.aborted),
+        onError: (err: any) => {
+          this.onErrorCallback(err, !!signal?.aborted);
+        },
         onProgress: (replyChunk: string, reasoningChunk?: string) => {
           reply += replyChunk;
           reasoning += reasoningChunk || '';

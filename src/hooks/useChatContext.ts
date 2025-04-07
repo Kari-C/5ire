@@ -1,8 +1,8 @@
-import Debug from 'debug';
+// import Debug from 'debug';
 
 import useChatStore from 'stores/useChatStore';
 import useSettingsStore from 'stores/useSettingsStore';
-import { DEFAULT_MAX_TOKENS, NUM_CTX_MESSAGES, tempChatId } from 'consts';
+import { DEFAULT_MAX_TOKENS, NUM_CTX_MESSAGES } from 'consts';
 import { useMemo } from 'react';
 import { isNil, isNumber, isUndefined } from 'lodash';
 import { isValidMaxTokens, isValidTemperature } from 'intellichat/validators';
@@ -11,7 +11,7 @@ import { IChat, IChatContext, IChatMessage, IPrompt } from 'intellichat/types';
 import { IChatModel } from 'providers/types';
 import useProvider from './useProvider';
 
-const debug = Debug('5ire:hooks:useChatContext');
+// const debug = Debug('5ire:hooks:useChatContext');
 
 export default function useChatContext(): IChatContext {
   const { getProvider: getChatProvider, getChatModel } = useProvider();
@@ -86,13 +86,13 @@ export default function useChatContext(): IChatContext {
       const prompt = chat.prompt as IPrompt | null;
       if (
         prompt?.maxTokens != null &&
-        isValidMaxTokens(prompt?.maxTokens, api.provider, model.name)
+        isValidMaxTokens(prompt?.maxTokens, api.provider, model.name as string)
       ) {
         maxTokens = prompt?.maxTokens || (prompt?.maxTokens as number);
       }
       if (
         chat?.maxTokens != null &&
-        isValidMaxTokens(chat?.maxTokens, api.provider, model.name)
+        isValidMaxTokens(chat?.maxTokens, api.provider, model.name as string)
       ) {
         maxTokens = chat?.maxTokens as number;
       }
@@ -120,21 +120,28 @@ export default function useChatContext(): IChatContext {
     const isToolEnabled = () => {
       const { getToolState } = useSettingsStore.getState();
       const model = getModel();
-      let toolEnabled = getToolState(getProvider().name, model.name);
+      let toolEnabled = getToolState(getProvider().name, model.name as string);
       if (isUndefined(toolEnabled)) {
         toolEnabled = model.toolEnabled || false;
       }
       return toolEnabled;
     };
 
-    const getCtxMessages = () => {
+    const getCtxMessages = (msgId?: string) => {
       const { chat } = useChatStore.getState();
       let ctxMessages: IChatMessage[] = [];
       const maxCtxMessages = isNumber(chat?.maxCtxMessages)
         ? chat?.maxCtxMessages
         : NUM_CTX_MESSAGES;
       if (maxCtxMessages > 0) {
-        const messages = useChatStore.getState().messages || [];
+        let messages = useChatStore.getState().messages || [];
+        if (msgId) {
+          const index = messages.findIndex((m) => m.id === msgId);
+          if (index > -1) {
+            messages = messages.slice(0, index + 1);
+          }
+        }
+
         if (messages.length <= maxCtxMessages) {
           ctxMessages = messages.slice(0, -1);
         } else {

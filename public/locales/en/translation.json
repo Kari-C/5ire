@@ -64,7 +64,7 @@
   "Chat.DeleteConfirmation": "Are you sure you want to delete the chat? ",
   "Chat.DeleteConfirmationInfo": " All messages in this conversation will be deleted. Not reversible.",
   "Common.Yes": "Yes",
-  "Notification.APINotReady": "Please configure the API on the Settings page before starting.",
+  "Notification.APINotReady": "Please configure the API on the Settings page before starting. (Shortcut: CMD+, )",
   "Common.Or": "Or",
   "Chat.New": "New Chat",
   "Common.ClearFilter": "Clear filter",

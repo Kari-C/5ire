@@ -108,13 +108,14 @@ export default class BaiduChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages, msgId);
     debug('About to make a request, payload:\r\n', payload);
     const { base } = this.apiSettings;
 
     const token = await this.geToken();
-    payload.model = this.context.getModel().name.toLowerCase();
+    payload.model = (this.getModelName() as string).toLowerCase();
 
     const url = urlJoin('/v2/chat/completions', base);
     const response = await fetch(url, {

@@ -14,8 +14,11 @@ import {
   Bookmark16Regular,
   Copy16Regular,
   Copy16Filled,
+  ArrowSync16Filled,
+  ArrowSync16Regular,
 } from '@fluentui/react-icons';
-import { useState } from 'react';
+import eventBus from 'utils/bus';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useBookmarkStore from 'stores/useBookmarkStore';
 import useChatStore from 'stores/useChatStore';
@@ -28,6 +31,7 @@ const DeleteIcon = bundleIcon(Delete16Filled, Delete16Regular);
 const CopyIcon = bundleIcon(Copy16Filled, Copy16Regular);
 const BookmarkAddIcon = bundleIcon(Bookmark16Filled, Bookmark16Regular);
 const BookmarkOffIcon = bundleIcon(Bookmark16Regular, Bookmark16Filled);
+const ArrowSync = bundleIcon(ArrowSync16Filled, ArrowSync16Regular);
 
 export default function MessageToolbar({ message }: { message: IChatMessage }) {
   const { t } = useTranslation();
@@ -37,6 +41,8 @@ export default function MessageToolbar({ message }: { message: IChatMessage }) {
   const createBookmark = useBookmarkStore((state) => state.createBookmark);
   const deleteBookmark = useBookmarkStore((state) => state.deleteBookmark);
   const { notifySuccess } = useToast();
+  const bus = useRef(eventBus);
+
   const bookmark = async () => {
     const bookmark = await createBookmark({
       msgId: message.id,
@@ -69,6 +75,7 @@ export default function MessageToolbar({ message }: { message: IChatMessage }) {
     notifySuccess(t('Common.Notification.Copied'));
   };
 
+
   return (
     !message.isActive && (
       <div className="message-toolbar p-0.5 rounded-md flex justify-between items-center">
@@ -97,6 +104,17 @@ export default function MessageToolbar({ message }: { message: IChatMessage }) {
             icon={<CopyIcon />}
             appearance="subtle"
             onClick={copy}
+          />
+          <Button
+            size="small"
+            icon={<ArrowSync />}
+            appearance="subtle"
+            onClick={() => {
+              bus.current.emit('retry', {
+                msgId: message.id,
+                prompt: message.prompt,
+              });
+            }}
           />
           <Popover withArrow open={delPopoverOpen}>
             <PopoverTrigger disableButtonEnhancement>

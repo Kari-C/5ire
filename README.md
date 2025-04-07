@@ -39,23 +39,26 @@
 </div>
 <br />
 
-
- ### Before to activating tools feature, ensure the following components are installed:
+### Before to activating tools feature, ensure the following components are installed:
 
 - Python
 - Node.js
 - uv (Python package manager)
 
-
 These components are required as they constitute the runtime environment for the MCP Server. If you don't anticipate using the tools feature immediately, you may choose to skip this installation step and complete it later when the need arises.
 
 For detailed installation instructions, please see our [Installation Guide](INSTALLATION.md).
+
+### Dev Guide
+
+If you want to contribute code to 5ire or develop your own apps based on 5ire, start with the [Development Setup Guide](DEVELOPMENT.md).
 
 <br />
 
 # Features
 
 ## ⚒️ Support Tools via MCP Servers
+
 MCP is an open protocol that standardizes how applications provide context to LLMs. Think of MCP like a USB-C port for AI applications. Just as USB-C provides a standardized way to connect your devices to various peripherals and accessories, MCP provides a standardized way to connect AI models to different data sources and tools.
 
 With tools, you can access the file system, obtain system information, interact with databases, access remote data, and more, rather than just having a simple conversation.
@@ -67,36 +70,38 @@ We have created an open [marketplace for MCP Servers](https://github.com/nanbing
 https://github.com/user-attachments/assets/be66c30e-bb29-4dfe-9f25-8d396470ed60
 
 ## 💡 Local Knowledge Base
+
 We have integrated the bge-m3 as our local embedding model, which excels in multilingual vectorization. 5ire now supports parsing and vectorization of docx, xlsx, pptx, pdf, txt, and csv documents, enabling storage of these vectors to power robust Retrieval-Augmented Generation (RAG) capabilities locally.
 
 ![Local Knowledge Base Screenshot](https://5ire.app/knowledge.png)
 
 ## 📈 Usage Analytics
+
 By keeping track of your API usage and spending, you can gain a better understanding of how much you're spending on the API and make informed decisions to optimize your use of the service.
 
 ![Usage Analytics Screenshot](https://5ire.app/analytics.png)
 
 ## ✨ Prompts Library
+
 The prompt library provides an effective way to create and organize your own prompts. These prompts are highly versatile, thanks to their support for variables.
 
 ![Prompts Library Screenshot](https://5ire.app/prompts.png)
 
 ## 🔖 Bookmarks
+
 You can bookmark each conversation, and even if the original messages are deleted, the saved bookmarked content remains unaffected.
 ![Bookmarks Screenshot](https://5ire.app/bookmarks.png)
 
 ## 🔍 Quick Search
+
 You can perform keyword searches across all conversations, quickly pinpointing the information you need.
 ![Search Screenshot](https://5ire.app/search.png)
-
 
 > [!TIP]
 > Since 5ire uses native dependencies, it needs to be packaged on the corresponding platform. If it is on Mac OS, you may also need to configure APPLE_TEAM_ID, APPLE_ID, and APPLE_ID_PASS for notarization to avoid security alerts.
 
-
 <hr/>
 
-##  Discover Exceptional MCP Servers
+## Discover Exceptional MCP Servers
 
-> [!TIP]
-> [MCPSvr](https://github.com/nanbingxyz/mcpsvr), a community-driven directory of MCP servers, empowers developers to discover exceptional tools while offering a streamlined process for sharing their own MCP server creations.
+> [!TIP] > [MCPSvr](https://github.com/nanbingxyz/mcpsvr), a community-driven directory of MCP servers, empowers developers to discover exceptional tools while offering a streamlined process for sharing their own MCP server creations.

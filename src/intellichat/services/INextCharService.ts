@@ -12,7 +12,7 @@ export default interface INextChatService {
     deploymentId?: string; // azure
   };
   modelMapping: Record<string, string>;
-  chat(message: IChatRequestMessage[]): void;
+  chat(message: IChatRequestMessage[], msgId?:string): void;
   abort(): void;
   isReady(): boolean;
   onComplete(callback: (result: any) => Promise<void>): void;

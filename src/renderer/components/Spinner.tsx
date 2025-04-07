@@ -1,15 +1,20 @@
+import { forwardRef } from 'react';
 import './Spinner.scss';
 
-export default function Spinner({
-  size = 24,
-  className = '',
-}: {
-  size?: number;
-  className?: string;
-}) {
+function Spinner(
+  {
+    size = 24,
+    className = '',
+  }: {
+    size?: number;
+    className?: string;
+  },
+  ref: any,
+) {
   return (
     <div
       className={`spinner ${className}`}
+      ref={ref}
       style={{ width: size, height: size }}
     >
       <div style={{ width: size, height: size }} />
@@ -19,3 +24,4 @@ export default function Spinner({
     </div>
   );
 }
+export default forwardRef(Spinner);

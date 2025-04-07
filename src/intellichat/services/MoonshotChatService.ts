@@ -4,7 +4,7 @@ import Moonshot from 'providers/Moonshot';
 import OpenAIChatService from './OpenAIChatService';
 import INextChatService from './INextCharService';
 
-const debug = Debug('5ire:intellichat:MoonshotChatService');
+// const debug = Debug('5ire:intellichat:MoonshotChatService');
 
 export default class MoonshotChatService
   extends OpenAIChatService

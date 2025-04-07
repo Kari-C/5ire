@@ -67,6 +67,7 @@ export default class OpenAIChatService
   // eslint-disable-next-line class-methods-use-this
   protected async makeMessages(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<IChatRequestMessage[]> {
     const result = [];
     const systemMessage = this.context.getSystemMessage();
@@ -84,7 +85,7 @@ export default class OpenAIChatService
         content: systemMessage,
       });
     }
-    this.context.getCtxMessages().forEach((msg: IChatMessage) => {
+    this.context.getCtxMessages(msgId).forEach((msg: IChatMessage) => {
       result.push({
         role: 'user',
         content: msg.prompt,
@@ -98,9 +99,45 @@ export default class OpenAIChatService
     const processedMessages = await Promise.all(
       messages.map(async (msg) => {
         if (msg.role === 'tool') {
+          // Helper function to format tool message content
+          const formatToolMsgContent = (content: any): string => {
+            if (typeof content === 'string') {
+              return content;
+            }
+
+            if (Array.isArray(content)) {
+              return content
+                .map((item) => {
+                  if (typeof item === 'string') return item;
+
+                  if (item && typeof item === 'object') {
+                    if (item.type === 'text' && typeof item.text === 'string') {
+                      return item.text;
+                    }
+                    return JSON.stringify(item);
+                  }
+
+                  return String(item);
+                })
+                .join(' ');
+            }
+
+            if (content && typeof content === 'object') {
+              if (
+                'type' in content &&
+                content.type === 'text' &&
+                typeof content.text === 'string'
+              ) {
+                return content.text;
+              }
+            }
+
+            return String(content);
+          };
+
           return {
             role: 'tool',
-            content: JSON.stringify(msg.content),
+            content: formatToolMsgContent(msg.content),
             name: msg.name,
             tool_call_id: msg.tool_call_id,
           };
@@ -175,11 +212,12 @@ export default class OpenAIChatService
 
   protected async makePayload(
     message: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<IChatRequestPayload> {
     const modelName = this.getModelName() as string;
     const payload: IChatRequestPayload = {
       model: modelName,
-      messages: await this.makeMessages(message),
+      messages: await this.makeMessages(message, msgId),
       temperature: this.context.getTemperature(),
       stream: true,
     };
@@ -213,8 +251,9 @@ export default class OpenAIChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages, msgId);
     debug('About to make a request, payload:\r\n', payload);
     const { base, key } = this.apiSettings;
     const url = urlJoin('/chat/completions', base);

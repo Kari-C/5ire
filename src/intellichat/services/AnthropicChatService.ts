@@ -127,9 +127,10 @@ export default class AnthropicChatService
 
   protected async makeMessages(
     messages: IChatRequestMessage[],
+    msgId?:string
   ): Promise<IChatRequestMessage[]> {
     const result = this.context
-      .getCtxMessages()
+      .getCtxMessages(msgId)
       .reduce((acc: IChatRequestMessage[], msg: IChatMessage) => {
         return [
           ...acc,
@@ -175,10 +176,11 @@ export default class AnthropicChatService
 
   protected async makePayload(
     messages: IChatRequestMessage[],
+    msgId?:string
   ): Promise<IChatRequestPayload> {
     const payload: IChatRequestPayload = {
       model: this.getModelName(),
-      messages: await this.makeMessages(messages),
+      messages: await this.makeMessages(messages, msgId),
       temperature: this.context.getTemperature(),
       stream: true,
     };
@@ -214,8 +216,9 @@ export default class AnthropicChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?:string
   ): Promise<Response> {
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages, msgId);
     debug('About to make a request, payload:\r\n', payload);
     const { base, key } = this.apiSettings;
     const url = urlJoin('/messages', base);

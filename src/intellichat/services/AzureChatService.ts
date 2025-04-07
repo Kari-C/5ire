@@ -15,6 +15,7 @@ export default class AzureChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?:string
   ): Promise<Response> {
     const apiVersion = '2024-10-21';
     const { base, deploymentId, key } = this.apiSettings;
@@ -28,7 +29,7 @@ export default class AzureChatService
         'Content-Type': 'application/json',
         'api-key': key,
       },
-      body: JSON.stringify(await this.makePayload(messages)),
+      body: JSON.stringify(await this.makePayload(messages, msgId)),
       signal: this.abortController.signal,
     });
     return response;

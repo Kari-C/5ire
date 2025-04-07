@@ -78,22 +78,22 @@ export default function GlobalNav({ collapsed }: { collapsed: boolean }) {
         collapsed ? 'text-center' : ''
       } border-b border-base py-2`}
     >
-      <div className="px-0.5">
+      <div className="px-1">
         <WorkspaceMenu collapsed={collapsed} />
       </div>
       {IS_ASSISTANTS_ENABLED && (
-        <div className="px-0.5">
+        <div className="px-1">
           <Button
             appearance="subtle"
             icon={<EmojiSparkleIcon />}
             className="w-full justify-start"
           >
-            {collapsed ? null : t('Common.Assistants')}
+            {collapsed || t('Common.Assistants')}
           </Button>
         </div>
       )}
       {false && (
-        <div className="px-0.5">
+        <div className="px-1">
           <Button
             appearance="subtle"
             icon={<AppsIcon />}
@@ -117,10 +117,8 @@ export default function GlobalNav({ collapsed }: { collapsed: boolean }) {
               {t('Common.Tools')}
               {isMCPServersLoading ? (
                 <Spinner size={13} className="ml-1" />
-              ) : numOfActiveServers ? (
-                `(${numOfActiveServers})`
               ) : (
-                ''
+                !!numOfActiveServers && `(${numOfActiveServers})`
               )}
             </>
           )}

@@ -15,9 +15,10 @@ export default class DoubaoChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
     const { base, deploymentId, key } = this.apiSettings;
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages,msgId);
     payload.model = deploymentId;
     payload.stream = true;
     const url = urlJoin('/chat/completions', base);

@@ -160,6 +160,7 @@ export default class GoogleChatService
    */
   protected async makeMessages(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<IChatRequestMessage[]> {
     const result: IChatRequestMessage[] = [];
     const systemMessage = this.context.getSystemMessage();
@@ -169,7 +170,7 @@ export default class GoogleChatService
         parts: [{ text: systemMessage as string }],
       });
     }
-    for (const msg of this.context.getCtxMessages()) {
+    for (const msg of this.context.getCtxMessages(msgId)) {
       result.push({
         role: 'user',
         parts: [{ text: msg.prompt }],
@@ -201,9 +202,10 @@ export default class GoogleChatService
 
   protected async makePayload(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<IChatRequestPayload> {
     const payload: IChatRequestPayload = {
-      contents: await this.makeMessages(messages),
+      contents: await this.makeMessages(messages, msgId),
       generationConfig: {
         temperature: this.context.getTemperature(),
       },
@@ -236,8 +238,9 @@ export default class GoogleChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages, msgId);
     const isStream = this.context.isStream();
     debug(
       `About to make a request,stream:${isStream},  payload: ${JSON.stringify(

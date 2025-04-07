@@ -15,6 +15,7 @@ export default class DeepSeekChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
     const { base, key } = this.apiSettings;
     const url = urlJoin('/chat/completions', base);
@@ -24,7 +25,7 @@ export default class DeepSeekChatService
         'Content-Type': 'application/json',
         Authorization: `Bearer ${key}`,
       },
-      body: JSON.stringify(await this.makePayload(messages)),
+      body: JSON.stringify(await this.makePayload(messages, msgId)),
       signal: this.abortController.signal,
     });
     return response;

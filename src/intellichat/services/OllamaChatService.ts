@@ -51,8 +51,9 @@ export default class OllamaChatService
 
   protected async makeRequest(
     messages: IChatRequestMessage[],
+    msgId?: string,
   ): Promise<Response> {
-    const payload = await this.makePayload(messages);
+    const payload = await this.makePayload(messages, msgId);
     debug('Send Request, payload:\r\n', payload);
     const { base } = this.apiSettings;
     const url = urlJoin('/api/chat', base);
